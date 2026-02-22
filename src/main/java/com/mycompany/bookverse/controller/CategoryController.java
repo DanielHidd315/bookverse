@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author NganTTK-CE190411
  */
-@WebServlet(name = "CategoryController", urlPatterns = {"/category"})
+@WebServlet(name = "CategoryController", urlPatterns = { "/category" })
 public class CategoryController extends HttpServlet {
 
     private CategoryService categoryService = new CategoryService();
@@ -26,10 +26,10 @@ public class CategoryController extends HttpServlet {
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -49,9 +49,9 @@ public class CategoryController extends HttpServlet {
             case "create":
                 getCreateCategory(request, response);
                 break;
-//            case "delete":
-//                getDeleteCategory(request, response);
-//                break;
+            // case "delete":
+            // getDeleteCategory(request, response);
+            // break;
         }
 
     }
@@ -59,10 +59,10 @@ public class CategoryController extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -262,8 +262,7 @@ public class CategoryController extends HttpServlet {
         if (!success) {
             request.getSession().setAttribute(
                     "deleteError",
-                    "Không thể xóa thể loại vì đang được sử dụng"
-            );
+                    "Không thể xóa thể loại vì đang được sử dụng");
         }
 
         response.sendRedirect("category");
