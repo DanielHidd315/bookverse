@@ -164,7 +164,7 @@ public class CategoryController extends HttpServlet {
         categoryService.createCategory(category);
 
         request.getSession().removeAttribute("errorMsg");
-        request.getSession().setAttribute("successMsg", "Category created successfully");
+        request.getSession().setAttribute("successMsg", "Create category successfully");
         response.sendRedirect(request.getContextPath() + "/category");
     }
 
@@ -239,7 +239,7 @@ public class CategoryController extends HttpServlet {
         categoryService.editCategory(category);
 
         request.getSession().removeAttribute("errorMsg");
-        request.getSession().setAttribute("successMsg", "Category edied successfully");
+        request.getSession().setAttribute("successMsg", "Edit category successfully");
         response.sendRedirect(request.getContextPath() + "/category");
 
     }
@@ -262,7 +262,7 @@ public class CategoryController extends HttpServlet {
             request.getSession().setAttribute("errorMsg", "Cannot delete this category because it is currently in use");
         } else {
             request.getSession().removeAttribute("errorMsg");
-            request.getSession().setAttribute("successMsg", "Category deteled successfully");
+            request.getSession().setAttribute("successMsg", "Delete category successfully");
         }
         response.sendRedirect("category");
     }
