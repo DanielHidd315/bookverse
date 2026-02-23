@@ -62,26 +62,59 @@ public class GenreController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idStr = request.getParameter("id");
-        if (idStr != null && !idStr.trim().isEmpty()) {
-            try {
-                int id = Integer.parseInt(idStr);
-                Genre genre = genreServices.findGenreById(id);
-                request.setAttribute("genre_detail", genre);
-                request.getRequestDispatcher("/views/genreDetail-view.jsp").forward(request, response);
-            } catch (NumberFormatException e) {
-                System.out.println("id error, reload page");
-            }
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "list";
         }
-        String keyword = request.getParameter("keyword");
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            Genre genre = genreServices.findGenreByName(keyword);
-            request.setAttribute("genre", genre);
-            request.getRequestDispatcher("/views/genre-view.jsp").forward(request, response);
-        } else {
-            List<Genre> list = genreServices.getAllGenres();
-            request.setAttribute("genre_list", list);
-            request.getRequestDispatcher("/views/genre-view.jsp").forward(request, response);
+        switch (action) {
+            case "list":
+                List<Genre> genres = genreServices.getAllGenres();
+                if (genres == null || genres.isEmpty()) {
+                    request.setAttribute("message", "No vouchers found");
+                } else {
+                    request.setAttribute("genres", genres);
+                }
+                request.getRequestDispatcher("/views/genre-list.jsp").forward(request, response);
+                break;
+            case "search":
+                String keyword = request.getParameter("keyword");
+                List<Genre> searchList = genreServices.searchGenres(keyword);
+                if (searchList == null || searchList.isEmpty()) {
+                    request.setAttribute("message", "No genre found");
+                } else {
+                    request.setAttribute("genres", searchList);
+                }
+                request.getRequestDispatcher("/views/genre-list.jsp").forward(request, response);
+                break;
+            case "detail":
+                String idStr = request.getParameter("id");
+                if (idStr == null || idStr.trim().isEmpty()) {
+                    request.setAttribute("message", "Invalid genre ID");
+                    request.getRequestDispatcher("/views/genre-list.jsp")
+                            .forward(request, response);
+                    return;
+                }
+                try {
+                    int id = Integer.parseInt(idStr);
+                    Genre genre = genreServices.findGenreById(id);
+                    if (genre == null) {
+                        request.setAttribute("message", "Genre not found");
+                        request.getRequestDispatcher("/views/genre-list.jsp")
+                                .forward(request, response);
+                    } else {
+                        request.setAttribute("genre", genre);
+                        request.getRequestDispatcher("/views/genre-detail.jsp")
+                                .forward(request, response);
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("message", "Genre ID must be a number");
+                    request.getRequestDispatcher("/views/genre-list.jsp")
+                            .forward(request, response);
+                }
+                break;
+            default:
+                response.sendRedirect(request.getContextPath() + "/genre");
+                break;
         }
     }
 
@@ -96,36 +129,49 @@ public class GenreController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String genreName = request.getParameter("genreName");
-        String description = request.getParameter("description");
-        int result = genreServices.insertGenre(genreName, description);
-        switch (result) {
-            case 0:
-                request.setAttribute("result", "success");
-                break;
-            case 1:
-                request.setAttribute("result", "false");
-                break;
-            case 2:
-                request.setAttribute("result", "genre is aready exist");
-                break;
-            case 3:
-                request.setAttribute("errorName", "Name is empty");
-                request.setAttribute("result", "false");
-                break;
-            case 4:
-                request.setAttribute("errorDes", "Description is empty");
-                request.setAttribute("result", "false");
-                break;
-            case 5:
-                request.setAttribute("errorName", "Name is empty");
-                request.setAttribute("errorDes", "Description is empty");
-                request.setAttribute("result", "false");
-                break;
-            default:
-                break;
+        String action = request.getParameter("action");
+        if (action == null) {
+            response.sendRedirect(request.getContextPath() + "/genre");
+            return;
         }
-        request.getRequestDispatcher("/views/createGenre-view.jsp").forward(request, response);
+        if (action.equals("edit")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Genre oldGenre = genreServices.findGenreById(id);
+            if (oldGenre == null) {
+                request.getSession().setAttribute("message", "Genre not found");
+                response.sendRedirect(request.getContextPath() + "/genre");
+                return;
+            }
+            String msg = genreServices.editGenre(id,
+                    request.getParameter("name"),
+                    request.getParameter("description"),
+                    Integer.parseInt(request.getParameter("status")));
+
+            if (!msg.contains("successfully")) {
+                request.setAttribute("message", msg);
+                request.setAttribute("genre", oldGenre);
+                request.setAttribute("openEdit", true);
+                request.getRequestDispatcher("/views/genre-detail.jsp")
+                        .forward(request, response);
+                return;
+            }
+
+            request.getSession().setAttribute("message", msg);
+            response.sendRedirect(request.getContextPath() + "/genre?action=detail&id=" + id);
+        } else if (action.equals("create")) {
+            String genreName = request.getParameter("name");
+            String description = request.getParameter("description");
+            String msg = genreServices.insertGenre(genreName, description);
+            if (!msg.contains("successfully")) {
+                request.setAttribute("message", msg);
+                request.setAttribute("openCreate", true);
+                request.getRequestDispatcher("/views/genre-list.jsp")
+                        .forward(request, response);
+                return;
+            }
+            request.getSession().setAttribute("message", msg);
+            response.sendRedirect(request.getContextPath() + "/genre");
+        }
     }
 
     /**

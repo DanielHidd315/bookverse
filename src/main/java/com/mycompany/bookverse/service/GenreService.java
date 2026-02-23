@@ -24,39 +24,60 @@ public class GenreService {
         return genreDAO.findById(id);
     }
 
-    public Genre findGenreByName(String name) {
-        return genreDAO.findByName(name);
+    public List<Genre> searchGenres(String keyword) {
+        return genreDAO.searchByName(keyword);
     }
 
-    public int insertGenre(String name, String des) {
-        if ((name == null || name.trim().isEmpty()) && (des == null || des.trim().isEmpty())) {
-            return 5;
-        } else if (des == null || des.trim().isEmpty()) {
-            return 4;
-        } else if (name == null || name.trim().isEmpty()) {
-            return 3;
+    public String insertGenre(String name, String des) {
+
+        if (des == null || des.trim().isEmpty()) {
+            return "Description is empty";
         }
-        List<Genre> list = genreDAO.findAll();// Lấy danh sách genre trong database
-        boolean checkExist = false;
-        for (Genre genre : list) {// Kiểm tra xem genre đã tồn tại trong db chưa.
-            if (genre.getGenreName().equalsIgnoreCase(name)) {// nếu đã tồn tại thì trả về true
-                checkExist = true;
-                break;
-            }
+        if (name == null || name.trim().isEmpty()) {
+            return "Name is empty";
         }
+
+        boolean checkExist = genreDAO.checkGenreExist(name);
+
         if (!checkExist) {// nếu chưa tồn tại thì bắt đầu tạo genre mới
             Genre genre = new Genre();
             genre.setGenreName(name);
             genre.setDescriptionText(des);
             genre.setStatus(0);// set mặt định là 0 (inactive)
             if (genreDAO.createGenre(genre)) {// nếu tạo thành công thì trả về 0
-                return 0;
+                return "Create genre successfully";
             } else // tạo không được thì trả về 1 (các lỗi như database bị mất kết nối, mạng kém ...)
             {
-                return 1;
+                return "Create genre false";
             }
         } else {// tạo không được do genre bị trùng thì trả về 2
-            return 2;
+            return "Genre already exists";
+        }
+    }
+
+    public String editGenre(int id, String name, String description, int status) {
+        boolean checkExist = genreDAO.checkGenreExist(name);
+        Genre old = genreDAO.findById(id);
+        if (!checkExist) {
+            return "Genre does not exist";
+        }
+        if (description == null || description.trim().isEmpty()) {
+            return "Description is empty";
+        }
+        if (name == null || name.trim().isEmpty()) {
+            return "Name is empty";
+        }
+        if (status != 0 && status != 1) {
+            return "status must be 1 or 2";
+        }
+        old.setGenreName(name);
+        old.setDescriptionText(description);
+        old.setStatus(status);
+
+        if (genreDAO.update(old)) {
+            return "Update genre successfully";
+        } else {
+            return "Update genre false";
         }
     }
 }
