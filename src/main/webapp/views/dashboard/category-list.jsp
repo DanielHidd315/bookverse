@@ -26,11 +26,13 @@
                 <i class="bi bi-plus-lg me-1"></i> Add New Category
             </button>
 
-            <form method="get" action="category" class="search-form">
+            <form action="${pageContext.request.contextPath}/category" method="get">
+                <input type="hidden" name="action" value="search"/>
                 <div class="search-box">
                     <i class="bi bi-search"></i>
                     <input type="text" name="keyword" placeholder="Search categories..." value="${keyword}">
                 </div>
+                <button type="submit" hidden></button>
             </form>
         </div>
 

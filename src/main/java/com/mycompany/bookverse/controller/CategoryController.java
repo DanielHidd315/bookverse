@@ -35,14 +35,17 @@ public class CategoryController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String view = request.getParameter("view");
-        if (view == null) {
-            view = "list";
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "list";
         }
 
-        switch (view) {
+        switch (action) {
             case "list":
                 getListCategories(request, response);
+                break;
+            case "search":
+                getSearchCategories(request, response);
                 break;
         }
 
@@ -82,22 +85,31 @@ public class CategoryController extends HttpServlet {
     private void getListCategories(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String keyword = request.getParameter("keyword");
-        List<Category> list;
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            list = categoryService.getsearchByName(keyword);
+        List<Category> list = categoryService.getAllCategories();
 
-            if (list == null || list.isEmpty()) {
-                request.setAttribute("message", "No category found for: " + keyword);
-            }
-            request.setAttribute("keyword", keyword);
-        } else {
-            list = categoryService.getAllCategories();
-        }
         request.setAttribute("categories", list);
         request.setAttribute("contentPage", "category-list.jsp");
         request.setAttribute("activeMenu", "category");
         request.getRequestDispatcher("/views/dashboard/dashboard.jsp").forward(request, response);
+    }
+
+    private void getSearchCategories(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String keyword = request.getParameter("keyword");
+
+        List<Category> list = categoryService.getsearchByName(keyword);
+
+        if (list == null || list.isEmpty()) {
+            request.setAttribute("message", "No category found");
+        } else {
+            request.setAttribute("categories", list);
+        }
+
+        request.setAttribute("keyword", keyword);
+        request.setAttribute("contentPage", "category-list.jsp");
+        request.setAttribute("activeMenu", "category");
+        request.getRequestDispatcher("/views/dashboard/dashboard.jsp").forward(request, response);
+
     }
 
     private void handleCreateAction(HttpServletRequest request, HttpServletResponse response)
