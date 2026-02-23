@@ -6,6 +6,7 @@ package com.mycompany.bookverse.controller;
 
 import com.mycompany.bookverse.model.Category;
 import com.mycompany.bookverse.service.CategoryService;
+import com.mycompany.bookverse.service.ProductService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -23,6 +24,7 @@ import java.util.List;
 public class CategoryController extends HttpServlet {
 
     private CategoryService categoryService = new CategoryService();
+    private ProductService productService = new ProductService();
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -43,6 +45,9 @@ public class CategoryController extends HttpServlet {
         switch (action) {
             case "list":
                 getListCategories(request, response);
+                break;
+            case "detail":
+                getDetailCategory(request, response);
                 break;
             case "search":
                 getSearchCategories(request, response);
@@ -110,6 +115,20 @@ public class CategoryController extends HttpServlet {
         request.setAttribute("activeMenu", "category");
         request.getRequestDispatcher("/views/dashboard/dashboard.jsp").forward(request, response);
 
+    }
+
+    private void getDetailCategory(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        // 1. Lấy categoryId từ request
+        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+
+        // 2. Đếm số sản phẩm thuộc category
+        long quantity = productService.countProductByCategoryId(categoryId);
+
+        // 3. Trả JSON cho popup
+        response.setContentType("application/json");
+        response.getWriter().print("{\"quantity\": " + quantity + "}");
     }
 
     private void handleCreateAction(HttpServletRequest request, HttpServletResponse response)

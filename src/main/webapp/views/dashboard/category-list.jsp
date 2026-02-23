@@ -44,7 +44,7 @@
                     </div>
                     <c:remove var="successMsg" scope="session"/>
                 </c:if>
-                   <c:if test="${not empty errorMsg}">
+                <c:if test="${not empty errorMsg}">
                     <div class="alert alert-error">
                         ${errorMsg}
                     </div>
@@ -79,6 +79,7 @@
 
                                 <td>
                                     <div class="action-buttons">
+                                        <!--<input type="hidden" name="action" value="detail"/>-->
                                         <button type="button"
                                                 class="btn-action btn-detail"
                                                 title="View Detail"
@@ -135,7 +136,7 @@
 <div id="createPopup" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Create Category</h3>
+            <h3>Add new Category</h3>
         </div>
 
         <c:if test="${not empty createError}">
@@ -185,6 +186,7 @@
             <tr><th>Name:</th><td id="detailName"></td></tr>
             <tr><th>Description:</th><td id="detailDesc"></td></tr>
             <tr><th>Status:</th><td id="detailStatus"></td></tr>
+            <tr><th>Quantity:</th><td id="detailQuantity"></td></tr>
         </table>
 
         <div class="modal-footer">
@@ -251,6 +253,18 @@
         document.getElementById("detailName").innerText = name;
         document.getElementById("detailDesc").innerText = desc;
         document.getElementById("detailStatus").innerText = status == 1 ? "Active" : "Inactive";
+        document.getElementById("detailQuantity").innerText = "Loading...";
+
+        fetch('${pageContext.request.contextPath}/category?action=detail&categoryId=' + id)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("detailQuantity").innerText = data.quantity;
+                })
+                .catch(error => {
+                    document.getElementById("detailQuantity").innerText = "Error";
+                });
+
+
         document.getElementById("detailPopup").style.display = "flex";
     }
     function closeDetailPopup() {
@@ -331,15 +345,4 @@
         };
     </script>
 </c:if>
-<c:if test="${not empty successMsg}">
-    <script>
-        showMessage("success", "Success", "${successMsg}");
-    </script>
-    <c:remove var="successMsg" scope="session"/>
-</c:if>
-<c:if test="${not empty errorMsg}">
-    <script>
-        showMessage("error", "Error", "${errorMsg}");
-    </script>
-    <c:remove var="errorMsg" scope="session"/>
-</c:if>
+
