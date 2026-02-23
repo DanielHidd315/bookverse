@@ -132,5 +132,13 @@
                 cursor: pointer;
             }
         </style>
+        <%-- Delete --%>
+        <form action="${pageContext.request.contextPath}/genre" method="post">
+            <input type="hidden" name="action" value="delete"/>
+            <input type="hidden" name="id" value="${genre.genreId}"/>
+            <button type="submit" onclick="return confirm('Delete this genre?')">
+                Delete
+            </button>
+        </form>
     </body>
 </html>

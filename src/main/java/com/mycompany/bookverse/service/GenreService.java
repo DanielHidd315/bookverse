@@ -80,4 +80,16 @@ public class GenreService {
             return "Update genre false";
         }
     }
+    public String deleteGenre(int id){
+        if(findGenreById(id)==null){
+            return "Genre does not exist";
+        }
+        if(genreDAO.checkGenreInUse(id)){
+            return "Genre is in use";
+        }
+        if(genreDAO.deleteById(id)){
+        return "Delete genre successfully";
+        }
+        else return "Delete genre false";
+    }
 }

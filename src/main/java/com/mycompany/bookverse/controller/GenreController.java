@@ -135,29 +135,35 @@ public class GenreController extends HttpServlet {
             return;
         }
         if (action.equals("edit")) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            Genre oldGenre = genreServices.findGenreById(id);
-            if (oldGenre == null) {
-                request.getSession().setAttribute("message", "Genre not found");
+            try {
+
+                int id = Integer.parseInt(request.getParameter("id"));
+                Genre oldGenre = genreServices.findGenreById(id);
+                if (oldGenre == null) {
+                    request.getSession().setAttribute("message", "Genre not found");
+                    response.sendRedirect(request.getContextPath() + "/genre");
+                    return;
+                }
+                String msg = genreServices.editGenre(id,
+                        request.getParameter("name"),
+                        request.getParameter("description"),
+                        Integer.parseInt(request.getParameter("status")));
+
+                if (!msg.contains("successfully")) {
+                    request.setAttribute("message", msg);
+                    request.setAttribute("genre", oldGenre);
+                    request.setAttribute("openEdit", true);
+                    request.getRequestDispatcher("/views/genre-detail.jsp")
+                            .forward(request, response);
+                    return;
+                }
+
+                request.getSession().setAttribute("message", msg);
+                response.sendRedirect(request.getContextPath() + "/genre?action=detail&id=" + id);
+            } catch (Exception e) {
+                request.getSession().setAttribute("message", "Invalid input data");
                 response.sendRedirect(request.getContextPath() + "/genre");
-                return;
             }
-            String msg = genreServices.editGenre(id,
-                    request.getParameter("name"),
-                    request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("status")));
-
-            if (!msg.contains("successfully")) {
-                request.setAttribute("message", msg);
-                request.setAttribute("genre", oldGenre);
-                request.setAttribute("openEdit", true);
-                request.getRequestDispatcher("/views/genre-detail.jsp")
-                        .forward(request, response);
-                return;
-            }
-
-            request.getSession().setAttribute("message", msg);
-            response.sendRedirect(request.getContextPath() + "/genre?action=detail&id=" + id);
         } else if (action.equals("create")) {
             String genreName = request.getParameter("name");
             String description = request.getParameter("description");
@@ -170,6 +176,22 @@ public class GenreController extends HttpServlet {
                 return;
             }
             request.getSession().setAttribute("message", msg);
+            response.sendRedirect(request.getContextPath() + "/genre");
+        } else if (action.equals("delete")) {
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                String msg = genreServices.deleteGenre(id);
+                if (!msg.contains("successfully")) {
+                     request.setAttribute("message", msg);
+                     request.getRequestDispatcher("/views/genre-list.jsp")
+                        .forward(request, response);
+                     return;
+                }
+                request.getSession().setAttribute("message", msg);
+            } catch (Exception e) {
+                     e.printStackTrace();
+                request.getSession().setAttribute("message", "Invalid voucher ID");
+            }
             response.sendRedirect(request.getContextPath() + "/genre");
         }
     }

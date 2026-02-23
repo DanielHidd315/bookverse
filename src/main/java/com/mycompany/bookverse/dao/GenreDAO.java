@@ -33,7 +33,6 @@ public class GenreDAO {
             return em.createNamedQuery("Genre.findByGenreId", Genre.class)
                     .setParameter("genreId", id)
                     .getSingleResult();
-
         } catch (Exception e) {
             return null;
         } finally {
@@ -95,5 +94,40 @@ public class GenreDAO {
         }
         return false;
     }
+    public boolean checkGenreInUse(int id){
+        EntityManager em = JPAUtil.getEntityManager();
+    try {
+        Long count = em.createQuery(
+                "SELECT COUNT(b) FROM Book b WHERE b.genreId.id = :id",
+                Long.class)
+                .setParameter("id", id)
+                .getSingleResult();
 
+        return count > 0;
+
+    } finally {
+        em.close();
+    }
+    }
+    public boolean deleteById(int id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            Genre genre = em.find(Genre.class, id);
+            if (genre == null) {
+                return false;
+            }
+            em.getTransaction().begin();
+            em.remove(genre);
+            em.getTransaction().commit();
+            return true;
+
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            return false;
+        } finally {
+            em.close();
+        }
+    }
 }
