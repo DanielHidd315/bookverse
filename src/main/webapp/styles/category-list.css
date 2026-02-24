@@ -304,3 +304,19 @@
         opacity: 1
     }
 }
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detail-table th {
+    text-align: left;
+    width: 30%;
+    padding: 10px 0;
+    color: #555;
+}
+
+.detail-table td {
+    padding: 10px 0;
+    color: #333;
+}

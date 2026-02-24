@@ -20,23 +20,30 @@
                             <i class="bi bi-plus-lg me-1"></i> Add New Category
                         </button>
 
-                        <form method="get" action="category" class="search-form">
+                        <form action="${pageContext.request.contextPath}/category" method="get">
+                            <input type="hidden" name="action" value="search" />
                             <div class="search-box">
                                 <i class="bi bi-search"></i>
                                 <input type="text" name="keyword" placeholder="Search categories..." value="${keyword}">
                             </div>
+                            <button type="submit" hidden></button>
                         </form>
-                    </div>
-
-                    <div id="messagePopup" class="popup-overlay">
-                        <div class="popup-box">
-                            <h4 id="popupTitle"></h4>
-                            <p id="popupMessage"></p>
-                        </div>
                     </div>
 
                     <c:choose>
                         <c:when test="${not empty categories}">
+                            <c:if test="${not empty successMsg}">
+                                <div class="alert alert-success">
+                                    ${successMsg}
+                                </div>
+                                <c:remove var="successMsg" scope="session" />
+                            </c:if>
+                            <c:if test="${not empty errorMsg}">
+                                <div class="alert alert-error">
+                                    ${errorMsg}
+                                </div>
+                                <c:remove var="errorMsg" scope="session" />
+                            </c:if>
                             <table class="custom-table">
                                 <thead>
                                     <tr>
@@ -66,6 +73,7 @@
 
                                             <td>
                                                 <div class="action-buttons">
+                                                    <!--<input type="hidden" name="action" value="detail"/>-->
                                                     <button type="button" class="btn-action btn-detail"
                                                         title="View Detail" onclick="openDetailPopup(
                                                                 '${c.categoryId}',
@@ -122,7 +130,7 @@
             <div id="createPopup" class="modal-overlay">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>Create Category</h3>
+                        <h3>Add new Category</h3>
                     </div>
 
                     <c:if test="${not empty createError}">
@@ -167,25 +175,28 @@
                         <h3>Category Detail</h3>
                     </div>
 
-                    <div class="form-group">
-                        <label>ID</label>
-                        <input type="text" id="detailId" class="form-control" readonly>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="detailName" class="form-control" readonly>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Description</label>
-                        <input type="text" id="detailDesc" class="form-control" readonly>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Status</label>
-                        <input type="text" id="detailStatus" class="form-control" readonly>
-                    </div>
+                    <table class="detail-table">
+                        <tr>
+                            <th>ID:</th>
+                            <td id="detailId"></td>
+                        </tr>
+                        <tr>
+                            <th>Name:</th>
+                            <td id="detailName"></td>
+                        </tr>
+                        <tr>
+                            <th>Description:</th>
+                            <td id="detailDesc"></td>
+                        </tr>
+                        <tr>
+                            <th>Status:</th>
+                            <td id="detailStatus"></td>
+                        </tr>
+                        <tr>
+                            <th>Quantity:</th>
+                            <td id="detailQuantity"></td>
+                        </tr>
+                    </table>
 
                     <div class="modal-footer">
                         <button type="button" class="btn-cancel" onclick="closeDetailPopup()">Close</button>
@@ -247,10 +258,22 @@
                 }
 
                 function openDetailPopup(id, name, desc, status) {
-                    document.getElementById("detailId").value = id;
-                    document.getElementById("detailName").value = name;
-                    document.getElementById("detailDesc").value = desc;
-                    document.getElementById("detailStatus").value = status == 1 ? "Active" : "Inactive";
+                    document.getElementById("detailId").innerText = id;
+                    document.getElementById("detailName").innerText = name;
+                    document.getElementById("detailDesc").innerText = desc;
+                    document.getElementById("detailStatus").innerText = status == 1 ? "Active" : "Inactive";
+                    document.getElementById("detailQuantity").innerText = "Loading...";
+
+                    fetch('${pageContext.request.contextPath}/category?action=detail&categoryId=' + id)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById("detailQuantity").innerText = data.quantity;
+                        })
+                        .catch(error => {
+                            document.getElementById("detailQuantity").innerText = "Error";
+                        });
+
+
                     document.getElementById("detailPopup").style.display = "flex";
                 }
                 function closeDetailPopup() {
@@ -284,32 +307,6 @@
 
                 let popupTimer = null;
 
-                function showMessage(type, title, msg) {
-                    const popup = document.getElementById("messagePopup");
-                    const box = popup.querySelector(".popup-box");
-
-                    popupTitle.innerText = title;
-                    popupMessage.innerText = msg;
-
-                    //DÙ LÀ error HAY success → ĐỀU DÙNG SUCCESS STYLE
-                    box.classList.remove("popup-success", "popup-error");
-                    box.classList.add("popup-success");
-
-                    popup.style.display = "flex";
-
-                    // TỰ ĐỘNG TẮT SAU 4 GIÂY
-                    clearTimeout(popupTimer);
-                    popupTimer = setTimeout(() => {
-                        popup.style.display = "none";
-                    }, 3000);
-
-                    // 🔴 CLICK RA NGOÀI → TẮT
-                    popup.onclick = function (event) {
-                        if (event.target === popup) {
-                            popup.style.display = "none";
-                        }
-                    };
-                }
 
                 // Đóng Popup khi click ra ngoài vùng trắng
                 window.onclick = function (event) {
@@ -356,16 +353,4 @@
                         }, 100);
                     };
                 </script>
-            </c:if>
-            <c:if test="${not empty successMsg}">
-                <script>
-                    showMessage("success", "Success", "${successMsg}");
-                </script>
-                <c:remove var="successMsg" scope="session" />
-            </c:if>
-            <c:if test="${not empty errorMsg}">
-                <script>
-                    showMessage("error", "Error", "${errorMsg}");
-                </script>
-                <c:remove var="errorMsg" scope="session" />
             </c:if>
