@@ -267,7 +267,7 @@
                     fetch('${pageContext.request.contextPath}/category?action=detail&categoryId=' + id)
                         .then(response => response.json())
                         .then(data => {
-                            document.getElementById("detailQuantity").innerText = data.quantity;
+                            document.getElementById("detailQuantity").innerText = data.quantity + " products";
                         })
                         .catch(error => {
                             document.getElementById("detailQuantity").innerText = "Error";
