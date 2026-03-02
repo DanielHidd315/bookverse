@@ -72,15 +72,4 @@ public class ProductDAO {
         }
     }
 
-    public long countProductByCategory(int categoryId) {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            Long count = em.createNamedQuery("Product.countByCategoryId", Long.class)
-                    .setParameter("categoryId", categoryId)
-                    .getSingleResult();
-            return count;
-        } finally {
-            em.close();
-        }
-    }
 }

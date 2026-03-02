@@ -35,8 +35,4 @@ public class ProductService {
         }
         return productDao.findByName(keyword.trim());
     }
-    
-    public long countProductByCategoryId(int categoryId) {
-        return productDao.countProductByCategory(categoryId);
-    }
 }
