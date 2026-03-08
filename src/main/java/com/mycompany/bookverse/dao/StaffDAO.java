@@ -4,7 +4,7 @@
  */
 package com.mycompany.bookverse.dao;
 
-import com.mycompany.bookverse.model.*;
+import com.mycompany.bookverse.model.Staff;
 import com.mycompany.bookverse.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -12,49 +12,50 @@ import java.util.List;
 
 /**
  *
- * @author TrungNT - CE200064
+ * @author huyqu
  */
-public class CustomerDAO {
+public class StaffDAO {
 
-    public List<Customer> findAll(int page, int pageSize) {
+    public List<Staff> findAll(int page, int pageSize) {
         // Khởi tạo entity manager
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            // Câu lệnh JPQL (Lấy đối tượng Customer)
-            String jpql = "SELECT c FROM Customer c ORDER BY c.customerId DESC";
-            TypedQuery<Customer> query = em.createQuery(jpql, Customer.class);
+            // Câu lệnh JPQL (Lấy đối tượng Staff)
+            String jpql = "SELECT s FROM Staff s ORDER BY s.staffId DESC";
+            TypedQuery<Staff> query = em.createQuery(jpql, Staff.class);
             query.setMaxResults(com.mycompany.bookverse.utils.PaginationConfig.ADMIN_ITEMS_PER_PAGE);
             query.setFirstResult((page - 1) * pageSize);
             query.setMaxResults(pageSize);
+
             return query.getResultList();
         } finally {
             em.close();
         }
     }
 
-    public long getTotalCustomers() {
+    public long getTotalStaffs() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT COUNT(c) FROM Customer c", Long.class).getSingleResult();
+            return em.createQuery("SELECT COUNT(s) FROM Staff s", Long.class).getSingleResult();
         } finally {
             em.close();
         }
     }
 
-    public Customer findById(int id) {
+    public Staff findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.find(Customer.class, id);
+            return em.find(Staff.class, id);
         } finally {
             em.close();
         }
     }
 
-    public boolean create(Customer customer) {
+    public boolean create(Staff staff) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-            em.persist(customer);
+            em.persist(staff);
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
@@ -68,11 +69,11 @@ public class CustomerDAO {
         }
     }
 
-    public boolean update(Customer customer) {
+    public boolean update(Staff staff) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-            em.merge(customer);
+            em.merge(staff);
             em.getTransaction().commit();
             return true;
         } catch (Exception e) {
@@ -90,9 +91,9 @@ public class CustomerDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-            Customer customer = em.find(Customer.class, id);
-            if (customer != null) {
-                em.remove(customer);
+            Staff staff = em.find(Staff.class, id);
+            if (staff != null) {
+                em.remove(staff);
                 em.getTransaction().commit();
                 return true;
             }
@@ -108,30 +109,13 @@ public class CustomerDAO {
         }
     }
 
-    public List<Customer> search(String keyword) {
+    public List<Staff> search(String keyword) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            String hql = "SELECT c FROM Customer c WHERE c.fullName LIKE :keyword OR c.email LIKE :keyword OR c.phoneNumber LIKE :keyword";
-            TypedQuery<Customer> query = em.createQuery(hql, Customer.class);
+            String hql = "SELECT s FROM Staff s WHERE s.fullName LIKE :keyword OR s.email LIKE :keyword OR s.phoneNumber LIKE :keyword";
+            TypedQuery<Staff> query = em.createQuery(hql, Staff.class);
             query.setParameter("keyword", "%" + keyword + "%");
             return query.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public boolean checkDuplicateEmail(String email, int currentId) {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            // Tìm xem có email nào giống vậy mà ID khác với ông hiện tại không
-            String jpql = "SELECT COUNT(c) FROM Customer c WHERE c.email = :email AND c.customerId != :id";
-            Long count = em.createQuery(jpql, Long.class)
-                    .setParameter("email", email)
-                    .setParameter("id", currentId)
-                    .getSingleResult();
-            return count > 0;
-        } catch (Exception e) {
-            return false;
         } finally {
             em.close();
         }
