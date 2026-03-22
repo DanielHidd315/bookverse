@@ -74,7 +74,7 @@
 
     <div class="footer">
         <div class="footer-col" style="flex: 2; min-width: 200px;">
-            <h4>Book-SWP-G5</h4>
+            <h4>Bookverse</h4>
             <p style="color: #ddd; line-height: 1.6;">Your trusted partner for quality<br>books and series collections.</p>
         </div>
         <div class="footer-col" style="flex: 1; min-width: 120px;">
@@ -96,7 +96,7 @@
     </div>
     
     <div class="footer-bottom">
-        © 2026 BookStore. All rights reserved.
+        © 2026 Bookverse. All rights reserved.
     </div>
 
 </body>
