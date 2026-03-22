@@ -26,7 +26,7 @@
                 <i class="bi bi-plus-lg me-1"></i> Add New Customer
             </button>
             <!-- =============================== Search button =================================== -->
-            <form action="${pageContext.request.contextPath}/customer" method="GET" class="search-form">
+            <form action="${pageContext.request.contextPath}/dashboard/customer" method="GET" class="search-form">
                 <input type="hidden" name="action" value="search">
                 <div class="search-box">
                     <i class="bi bi-search"></i>
@@ -101,7 +101,7 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
 <!-- =============================================== Delete Customer button ============================================== -->
-                                        <form action="${pageContext.request.contextPath}/customer" method="post" style="display:inline;"
+                                        <form action="${pageContext.request.contextPath}/dashboard/dashboard/customer" method="post" style="display:inline;"
                                               onsubmit="return confirm('Delete Customer: ${c.fullName} (ID: ${c.customerId})?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="customerId" value="${c.customerId}">
@@ -320,7 +320,7 @@
             </div>
         </c:if>
 
-        <form action="${pageContext.request.contextPath}/customer" method="POST">
+        <form action="${pageContext.request.contextPath}/dashboard/customer" method="POST">
             <input type="hidden" name="action" value="create">
 
             <div class="form-group">
@@ -368,7 +368,7 @@
             </div>
         </c:if>
 
-        <form action="${pageContext.request.contextPath}/customer" method="POST" enctype="multipart/form-data">
+        <form action="${pageContext.request.contextPath}/dashboard/customer" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="action" value="edit">
             <input type="hidden" id="editCustomerId" name="customerId">
 

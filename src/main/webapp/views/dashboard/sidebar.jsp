@@ -29,13 +29,13 @@
         <div class="menu-section">Management</div>
 
         <li class="sidebar-item">
-            <a href="${pageContext.request.contextPath}/customer" 
+            <a href="${pageContext.request.contextPath}/dashboard/customer" 
                class="sidebar-link ${activeMenu == 'customer'? 'active':''}">
                 <i class="bi bi-people"></i> Customers
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="${pageContext.request.contextPath}/staff" 
+            <a href="${pageContext.request.contextPath}/dashboard/staff" 
                class="sidebar-link ${activeMenu == 'staff'? 'active':''}">
                 <i class="bi bi-person-badge"></i> Staff
             </a>
@@ -53,7 +53,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="${pageContext.request.contextPath}/order" 
+            <a href="${pageContext.request.contextPath}/dashboard/order" 
                class="sidebar-link ${activeMenu == 'order'? 'active':''}">
                 <i class="bi bi-cart2"></i> Orders
             </a>
@@ -77,7 +77,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="${pageContext.request.contextPath}/statistics" 
+            <a href="${pageContext.request.contextPath}/dashboard/statistics" 
                class="sidebar-link ${activeMenu == 'statistic'? 'active':''}">
                 <i class="bi bi-bar-chart-steps"></i> Statistics
             </a>

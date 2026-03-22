@@ -1,0 +1,64 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 20, 2026, 7:35:31 PM
+    Author     : huyqu
+*/
+
+body { 
+    margin: 0; padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #fdfcf0; 
+    display: flex; flex-direction: column; min-height: 100vh; 
+}
+
+
+.main-wrapper { 
+    flex: 1; display: flex; justify-content: center; align-items: center; 
+    padding: 60px 20px; 
+}
+.signup-card { 
+    background: #ffffff; width: 100%; max-width: 420px; 
+    padding: 40px; border-radius: 12px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; 
+}
+
+
+.signup-card h2 { font-family: 'Georgia', serif; font-size: 28px; color: #333; margin: 0 0 10px; }
+.signup-card p.subtitle { font-size: 14px; color: #777; margin: 0 0 30px; }
+
+
+.form-group { margin-bottom: 18px; text-align: left; }
+.form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; font-weight: 600; }
+.form-control { 
+    width: 100%; padding: 12px 15px; border: 1px solid #ddd; 
+    border-radius: 6px; font-size: 14px; box-sizing: border-box; 
+    outline: none; transition: 0.3s; 
+}
+.form-control:focus { border-color: #a88a6d; box-shadow: 0 0 5px rgba(168, 138, 109, 0.3); }
+
+
+.btn-submit { 
+    width: 100%; padding: 14px; background-color: #a88a6d; color: white; 
+    border: none; border-radius: 6px; font-size: 15px; font-weight: bold; 
+    cursor: pointer; transition: 0.3s; margin-top: 15px;
+}
+.btn-submit:hover { background-color: #8c6b5d; }
+
+.login-link { margin-top: 25px; font-size: 14px; color: #777; }
+.login-link a { color: #a88a6d; text-decoration: none; font-weight: bold; }
+.login-link a:hover { text-decoration: underline; }
+
+
+.alert { padding: 12px; border-radius: 6px; font-size: 14px; margin-bottom: 20px; text-align: left;}
+.alert-danger { background-color: #fee2e2; color: #dc2626; border: 1px solid #f87171; }
+
+
+.footer { background-color: #8c6b5d; color: white; padding: 40px 10%; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; font-size: 13px; }
+.footer-col h4 { font-family: 'Georgia', serif; font-size: 18px; margin: 0 0 15px; }
+.footer-col h5 { font-size: 14px; margin: 0 0 15px; color: #ddd; }
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col ul li { margin-bottom: 8px; color: #ddd; cursor: pointer; }
+.footer-bottom { text-align: center; padding: 15px; background-color: #7a5c4f; color: #ccc; font-size: 12px; }
