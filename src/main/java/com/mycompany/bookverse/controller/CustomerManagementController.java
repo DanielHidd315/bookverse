@@ -23,7 +23,7 @@ import com.mycompany.bookverse.utils.PaginationConfig;
  *
  * @author TrungNT - CE200064
  */
-@WebServlet(name = "CustomerController", urlPatterns = {"/dashboard/customer"})
+@WebServlet(name = "CustomerManagementController", urlPatterns = {"/dashboard/customer"})
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 10, // 10MB

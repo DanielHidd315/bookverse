@@ -28,7 +28,7 @@ import java.util.List;
         maxFileSize = 1024 * 1024 * 10,
         maxRequestSize = 1024 * 1024 * 50
 )
-@WebServlet(name = "StaffController", urlPatterns = {"/dashboard/staff"})
+@WebServlet(name = "StaffManagementController", urlPatterns = {"/dashboard/staff"})
 public class StaffManagementController extends HttpServlet {
 
     private StaffService staffService = new StaffService();
