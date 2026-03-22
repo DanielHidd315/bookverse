@@ -30,7 +30,7 @@ import com.mycompany.bookverse.utils.PaginationConfig;
         maxRequestSize = 1024 * 1024 * 50 // 50MB
 )
 
-public class CustomerController extends HttpServlet {
+public class CustomerManagementController extends HttpServlet {
 
     private CustomerService customerService = new CustomerService();
 

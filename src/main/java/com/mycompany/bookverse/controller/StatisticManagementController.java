@@ -22,7 +22,7 @@ import java.util.Map;
  * @author huyqu
  */
 @WebServlet(name = "StatisticController", urlPatterns = {"/dashboard/statistics"})
-public class StatisticController extends HttpServlet {
+public class StatisticManagementController extends HttpServlet {
 
     private StatisticService statisticService = new StatisticService();
 

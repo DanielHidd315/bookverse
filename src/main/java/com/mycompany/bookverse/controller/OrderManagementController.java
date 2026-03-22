@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "OrderController", urlPatterns = {"/dashboard/order"})
-public class OrderController extends HttpServlet {
+public class OrderManagementController extends HttpServlet {
 
     private OrderService orderService = new OrderService();
 
